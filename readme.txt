@@ -26,6 +26,6 @@ License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
 --------------------------------------------------------------------------------
 
-This plugin is kindly proposed by <a href="https://www.sentientbit.com/" target="_blank">Sentient Bit</a> team.
+This plugin is kindly proposed by Sentient Bit team.
 
 This plugin is only maintained, which means we do not guarantee free support. Consider reporting a problem and be patient.
