@@ -3,6 +3,7 @@
 /*
  * Plugin Name: ESAT - Essential Settings And Tools
  * Plugin URI: https://sentientbit.com/plugins/esat
+ * Description: ESAT plugin revolutionizes your website management, effortlessly streamlining your tasks and saving you valuable time. Unlocking advanced functionalities and enhancements is a breeze, eliminating the need for multiple plugins, elevateing your website to new heights of efficiency and effectiveness with ESAT by your side. If you need all ESAT Pro features, including dedicated support, we encourage you to purchase <a href="sentientbit.com/plugins/esat-pro">ESAT Pro</a>.
  * Version: 1.0.0
  * Author: Sentient Bit
  * Author URI: https://sentientbit.com
