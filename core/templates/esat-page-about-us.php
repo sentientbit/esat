@@ -1,4 +1,4 @@
-<div class="esap-wpcontent">
+<div class="esat-content-container">
     <div class="esap-container-about-us">
         <div class="px-4 pt-5 my-5 text-center border-bottom">
             <h1 class="display-4 fw-bold">Centered screenshot</h1>
