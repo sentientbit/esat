@@ -1,22 +1,22 @@
-<div class="esap-wpcontent" style="background: #f1f4fa!important;">
+<div class="esat-content-container">
     <div class="esat-overview">
         <div class="esat-overview-first">
             <!----------------------------------------------------------------------------->
-            <div class="container bg-white shadow-lg border rounded-3 p-4">
-                <div class="row pe-lg-0 pt-lg-5 align-items-center ">
-                  <div class="col-lg-7 p-3 p-lg-5 pt-lg-3">
-                    <h1 class="display-4 fw-bold lh-1">Go further with  <img id="" src="<?php echo ESAT_URL . 'assets/admin/images/esat-logo-h40.webp'; ?>" alt="ESAT"></h1>
-                    <p class="lead">
-                        Need something more? Take your site to the next level with our powerful build tool ESAT.
-                    </p>
-                    <a href="admin.php?page=esat-settings" class="btn btn-lg btn-outline-primary mb-3">Start setting up</a>
-                    <div class="d-grid gap-2 d-md-flex justify-content-md-start mb-4 mb-lg-3">
-                        </div>
-                  </div>
+            <div class="esat-container-further container bg-white shadow-lg border rounded-5 p-0">
+                <div class="row pe-lg-0 align-items-center ">
+                    <div class="col-lg-7 p-3 ps-5 pe-5 pt-4 pb-4">
+                        <h1 class="display-4 fw-bold lh-1">Go further with  <img id="" src="<?php echo ESAT_URL . 'assets/admin/images/esat-logo-h40.webp'; ?>" alt="ESAT"></h1>
+                        <p class="lead">
+                            Take your site to the next level with our powerful tool.
+                        </p>
+                        
+                    </div>
+                    <div class="col-lg-5 p-3 ps-5 pe-5 pt-4 pb-4 text-end">
+                        <a href="admin.php?page=esat-settings" class="btn btn-lg btn-outline-primary">Start setting up</a>
+                    </div>
                 </div>
-                <div class="text-center small mt-4 border-top pt-2">According to <a href="https://transparencyreport.google.com/safe-browsing/overview" target="_blank"><strong>Google latest stats</strong></a>, over <strong> 30k websites are hacked every day </strong> and <strong> over 30% of them are made in WordPress </strong>. <br> It's better to prevent an attack than to spend a lot of money and time to recover your data after an attack not to mention the situation when your clients' data are stolen.</div>
             </div>
-            
+            <!----------------------------------------------------------------------------->
             <div class="esat-security-check-viewer pt-5">
                 <table class="table table-striped">
                   <thead>
@@ -348,14 +348,14 @@
         </div>
     
         <div class="esat-overview-second">
-            <div class="card text-black bg-white mb-3 shadow-lg" style="max-width: 18rem;">
-                <div class="card-header">
-                    <h1 class="text-center font-weight-bold">Security level</h1>
+            <div class="security-card card bg-white p-4 shadow-lg">
+                <div class="card-header bg-white pb-3">
+                    <h2 class="display-6 fw-bold lh-1 text-center m-0 p-0">Security level</h2>
                 </div>
                 <div class="card-body m-0 p-0">
                     <div class="container">
                         <div class="row mt-4 mb-4">
-                            <div class="col-md-3 col-sm-6">
+                            <div class="progress-yellow col-md-3 col-sm-6">
                                 <div class="progress yellow">
                                     <span class="progress-left">
                                         <span class="progress-bar"></span>
@@ -371,23 +371,24 @@
                         <div class="row">
                             <table class="table">
                               <tbody>
-                                <tr>
+                                <tr class="text-center font">
                                   <th scope="row" class="text-success">Passed</th>
                                   <td>33</td>
-                                </tr>
-                                <tr>
                                   <th scope="row" class="text-danger">Failed</th>
                                   <td>6</td>
                                 </tr>
                               </tbody>
                             </table>
                         </div>
+                        <div class="row mb-3">
+                            <div class="card-info small border-bottom pb-3">According to <a href="https://transparencyreport.google.com/safe-browsing/overview" target="_blank"><strong>Google latest stats</strong></a>, over <strong> 30k websites are hacked every day </strong> and <strong> over 30% of them are made in WordPress </strong>. <br> It's better to prevent an attack than to spend a lot of money and time to recover your data after an attack not to mention the situation when your clients' data are stolen.</div>
+                        </div>
+                        <div class="row mb-3">
+                            <p class="lead m-0">
+                                <a class="container btn btn-primary btn-lg" href="#" role="button">Security check</a>
+                            </p>
+                        </div>
                     </div>
-                </div>
-                <div class="container">
-                    <p class="lead">
-                        <a class="container btn btn-primary btn-lg" href="#" role="button">Security check</a>
-                    </p>
                 </div>
             </div>
         </div>
