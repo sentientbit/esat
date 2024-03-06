@@ -75,4 +75,3 @@ if ( $maintenance === 'maintenance-style-1' ) {
 } else {
     
 }
-
