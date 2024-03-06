@@ -2,7 +2,6 @@
 
 /*
 Tags: wp-login, wp-login.php, custom, custom login url, jetpack, wpserveurm
-Description: ESAT plugin revolutionizes your website management, effortlessly streamlining your tasks and saving you valuable time. With ESAT, unlocking advanced functionalities and enhancements is a breeze, eliminating the need for multiple plugins. Elevate your website to new heights of efficiency and effectiveness with ESAT by your side. If you need all ESAT Pro features, including dedicated support, we encourage you to purchase ESAT Pro from sentientbit.com/plugins/esat-pro.
 Version: 1.0.0
 Requires at least: 6.0
 Tested up to: 6.4.3
