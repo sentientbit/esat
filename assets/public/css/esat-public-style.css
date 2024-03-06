@@ -1,3 +1,69 @@
-/**
- * @since 1.0.0
- */
+.astra-warning-container {
+    width: 100%;
+    padding: 10px 150px;
+    background-color: #ffeb3b!important;
+    border: 1px solid #ccc!important;
+}
+.astra-warning-container H3 {
+    color: #000;
+    margin: 0!important;
+}
+.astra-warning-container p {
+    color: #000;
+    margin: 0!important;
+}
+/*------------------------------------------------------------------------------
+/ 
+------------------------------------------------------------------------------*/
+.site-header {
+    position: fixed!important;
+    top: 0!important;
+    width: 100%;
+    background: none;
+    border-bottom: 1px solid #fff;
+    transition: background-color 0.3s;
+    z-index: 9999;
+}
+.site-header.site-header-fixed {
+    background-color: #ffffff;
+    box-shadow: 0px 8px 6px -6px rgba(0, 0, 0, 0.5);
+}
+.site-header.site-header-fixed .site-title a {
+    color: #000000!important;
+}
+.site-header.site-header-fixed .main-navigation a {
+    color: #000000!important;
+}
+.site-header.site-header-fixed .ast-custom-button {
+    color: #000000;
+    border-color: #000000;
+}
+
+/* Ajustare padding conținut */
+.site-content {
+    padding-top: 0;
+}
+
+/* Ajustare padding conținut pentru dispozitive mobile */
+@media (max-width: 800px) {
+    .site-content {
+        padding-top: 0;
+    }
+    /* Stick meniul de navigare - Ajustare margin-top pentru layout-ul dumneavoastră */
+    .main-navigation {
+        position: fixed;
+        margin-top: 0px;
+    }
+}
+
+/* Ajustare padding conținut pentru dispozitive mobile */
+@media (max-width: 650px) {
+    .site-content {
+        padding-top: 0;
+    }
+    /* Stick meniul de navigare - Ajustare margin-top pentru layout-ul dumneavoastră */
+    .main-navigation {
+        position: fixed;
+        margin-top: 0;
+    }
+}
