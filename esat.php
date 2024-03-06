@@ -7,7 +7,7 @@
  * Version: 1.0.2
  * Author: Sentient Bit
  * Author URI: https://sentientbit.com
- * GitHub Plugin URI: https://github.com/utilizatorul/tare-plugin
+ * GitHub Plugin URI: https://github.com/sentientbit/essential-settings-and-tool/releases/latest
  * Text Domain: esat
  * Requires at least: 6.0
  * Requires PHP: 7.4
