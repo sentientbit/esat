@@ -2,7 +2,7 @@
 
 /*
 Tags: wp-login, wp-login.php, custom, custom login url, jetpack, wpserveurm
-Version: 1.0.0
+Version: 1.0.3
 Requires at least: 6.0
 Tested up to: 6.4.3
 Requires PHP: 7.0
