@@ -1,159 +1,224 @@
 <?php
 
-namespace ESAT\Classes;
+// =============================================================================
+// Class ESAT_Core
+// @since 1.0.0
+// =============================================================================
 
-/**
- * Plugin ESAT_Core
- *
- * @since 1.0.0
- */
+namespace ESAT\Classes;
 
 if (!class_exists('ESAT_Core')) {
 
-class ESAT_Core {
-    private static $instance;
-
-    private function __construct() {
-        //self::load_esat_languages();
-        /* bootstrap, css & js core */
-        add_action('admin_enqueue_scripts', array($this, 'esat_enqueue_styles'));
-        /* menu */
-        add_action('admin_menu', array($this, 'esat_menu'));
-        /* plugins page links */
-        add_filter('plugin_action_links_' . ESAT_BASENAME, array($this, 'esat_settings_plugin_action_links'));
-        add_filter('plugin_action_links_' . ESAT_BASENAME, array($this, 'esat_get_pro_plugin_action_links'));
-        add_filter('plugin_row_meta', array($this, 'esat_about_plugin'), 10, 2);
-        add_filter('plugin_row_meta', array($this, 'esat_docs_faqs_plugin'), 10, 2);
-        add_action('admin_notices', array('ESAT_start', 'esat_display_feedback_notice'));
-        add_action('admin_head', array($this, 'remove_other_plugins_notifications'));
-        add_action('admin_enqueue_scripts', array($this, 'esat_bootstrap_style'));
-        self::include_esat_files();
-    }
-
-    public static function get_instance() {
-        if (!isset(self::$instance)) {
-            self::$instance = new self();
-        }
-        return self::$instance;
-    }
-
-    // =========================================================================
-    // Plugin translation
-    // @since 1.0.0
-    // =========================================================================
-    
-    /*function load_esat_languages() {
-        if (file_exists(ESAT_DIR . '/languages/esat-' . get_locale() . '.mo')) {
-            load_plugin_textdomain('esat', false, ESAT_DIR . '/languages/');
-        }
-    }
-    */
-
-
-
-    // =========================================================================
-    // Plugin initialization
-    // =========================================================================
-
-    public function include_esat_files() {
-        if (file_exists(ESAT_DIR . '/core/esat-autoload.php')) {
-            require_once ESAT_DIR . '/core/esat-autoload.php';
-        }
-        
-        if (file_exists(ESAT_DIR . '/core/esat-functions.php')) {
-            require_once ESAT_DIR . '/core/esat-functions.php';
-        }
-    }
-
-
-    public function esat_bootstrap_style() {
-        $screen = get_current_screen();
-        $allowed_pages = array(
-            'toplevel_page_esat',
-            'esat_page_esat-settings',
-            'esat_page_esat-about-us',
-            'esat_page_esat-upgrade-to-pro'
-        );
-    
-        if (in_array($screen->id, $allowed_pages)) {
-            wp_enqueue_style('bootstrap-css-admin', 'https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css');
-            wp_enqueue_script('bootstrap-js-admin', 'https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js', array('jquery'), '5.0.2', true);
-        }
-    }
-
-
-    
-    public static function esat_enqueue_styles() {
-        // Bootstrap
-        // -----------------------------------------------------------------------------
-        
-        
-        // Font awesome
-        // -----------------------------------------------------------------------------
-        //wp_enqueue_style('font-awesome', 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css', array(), '6.0.0-beta3');
-        
-        // Custom css an js
-        // -----------------------------------------------------------------------------
-        wp_enqueue_style('esat-admin-style', ESAT_URL . '/assets/admin/css/esat-admin-style.css', __FILE__);
-        wp_enqueue_style('east-admin-components', ESAT_URL . '/assets/admin/css/esat-admin-components.css', __FILE__);
-        
-        wp_enqueue_script('jquery', 'https://code.jquery.com/jquery-1.12.0.min.js', array(), null, false);
-        wp_enqueue_script('esat-admin-script', ESAT_URL . '/assets/admin/js/esat-admin-components.js', __FILE__, array('jquery'), null, true);
-    }
-
-
-// =============================================================================
-// Plugin menu
-// =============================================================================
-    public function esat_menu() {
-        add_menu_page(
-            'ESAT',
-            'ESAT',
-            'manage_options',
-            'esat',
-            array($this, 'esat_overview_submenu'),
-            'data:image/svg+xml;base64,' . base64_encode( file_get_contents( ESAT_DIR . '/assets/admin/images/esat-icon.svg' ) ),
-            99
-        );
-        add_submenu_page(
-            'esat',
-            'Overview',
-            'Overview',
-            'manage_options',
-            'esat',
-            'esat_overview_submenu'
-        );
-        add_submenu_page(
-            'esat',
-            'Settings',
-            'Settings',
-            'manage_options',
-            'esat-settings',
-            array($this, 'esat_settings_submenu')
-        );
-        add_submenu_page(
-            'esat',
-            'About us',
-            'About us',
-            'manage_options',
-            'esat-about-us',
-            array($this, 'esat_about_us_submenu')
-        );
-        add_submenu_page(
-            'esat',
-            'Upgrade to Pro',
-            'Upgrade to Pro',
-            'manage_options',
-            'esat-upgrade-to-pro',
-            array($this, 'esat_upgrade_to_pro_submenu')
-        );
-    }
-    
-    public function esat_admin_header($pageTitle)
+    class ESAT_Core
     {
-        echo '
-            <div class="esat-header-wrap">
-                <div class="esat-header-wrap-title">
+        private static $instance;
+
+        private function __construct()
+        {
+            // Languages
+            /* self::load_esat_languages(); */
+            // Includes
+            self::include_esat_files();
+            // Bootstrap, css & js
+            add_action('admin_enqueue_scripts', array($this, 'esat_bootstrap_style'));
+            add_action('admin_enqueue_scripts', array($this, 'esat_enqueue_styles'));
+            // Menu
+            add_action('admin_menu', array($this, 'esat_menu'));
+            // Dashboar gadget
+            add_action('wp_dashboard_setup', array($this, 'esat_dashboard_widget'));
+            // Notices
+            add_action('admin_notices', array('ESAT_start', 'esat_display_feedback_notice'));
+            add_action('admin_head', array($this, 'remove_other_plugins_notifications'));
+            // Plugins page links
+            add_filter('plugin_action_links_' . ESAT_BASENAME, array($this, 'esat_settings_plugin_action_links'));
+            add_filter('plugin_action_links_' . ESAT_BASENAME, array($this, 'esat_get_pro_plugin_action_links'));
+            add_filter('plugin_row_meta', array($this, 'esat_docs_faqs_plugin'), 10, 2);
+            // Update
+            //add_action('admin_init', array($this, 'esat_check_for_updates'));
+            //add_action('wp', array($this, 'check_github_update'));
+            //add_action( 'after_plugin_row', array( $this, 'display_update_notification_in_plugins_page' ), 10, 3 );
+            //add_action('wp', array($this, 'update_github_plugin'));
+            
+        }
+
+        public static function get_instance()
+        {
+            if (!isset(self::$instance)) {
+                self::$instance = new self();
+            }
+            return self::$instance;
+        }
+        
+        /**
+         * Perform checks before the plugin activation
+         * 
+         * @since 1.0.0
+         */
+        function esat_check_min_php_version() {
+            $min_php_version = '7.4';
+        
+            if (version_compare(PHP_VERSION, $min_php_version, '<')) {
+            	$error_message = sprintf(__('ESAT requires PHP version %1$s or greater. Older versions of PHP are no longer supported. Your current version of PHP is %2$s.', 'esat'), $min_php_version, PHP_VERSION);
+            	echo '<div class="error" style="padding: 300px;"><p>' . $error_message . '</p></div>';
+            	return false;
+            }
+            
+            return true;
+        }
+        
+        /**
+         * Check for the minimum WordPress version (@return bool)
+         * 
+         * @since 1.0.2
+         */
+        function esat_check_min_wp_version() {
+            $min_wp_version = '6.0';
+            
+            if (version_compare(get_bloginfo('version'), $min_wp_version, '<')) {
+            	return false;
+            }
+            
+            return true;
+        }
+        
+        /**
+        * Activation
+        * 
+        * @since 1.0.2
+        */
+        /*function esat_check_versions() {
+            if (!self::esat_check_min_php_version() || !self::esat_check_min_wp_version()) {
+            	wp_redirect(add_query_arg(array('esat_error' => '1'), admin_url('plugins.php')));
+            	exit;
+            }
+        }*/
+        
+        /**
+         * Languages
+         * 
+         * @since 1.0.0
+         */
+        /*function load_esat_languages() {
+            if (file_exists(ESAT_DIR . '/languages/esat-' . get_locale() . '.mo')) {
+                load_plugin_textdomain('esat', false, ESAT_DIR . '/languages/');
+            }
+        }*/
+        
+        /**
+         * Includes
+         * 
+         * @since 1.0.0
+         */
+        public function include_esat_files()
+        {
+            /*if (file_exists(ESAT_DIR . '/core/esat-autoload.php')) {
+            require_once ESAT_DIR . '/core/esat-autoload.php';
+        }*/
+        }
+
+        /**
+         * Bootstrap style
+         * 
+         * @since 1.0.0
+         */
+        public function esat_bootstrap_style()
+        {
+            $screen = get_current_screen();
+            $allowed_pages = array(
+                'toplevel_page_esat',
+                'esat_page_esat-settings',
+                'esat_page_esat-about-us',
+                'esat_page_esat-upgrade-to-pro'
+            );
+
+            if (in_array($screen->id, $allowed_pages)) {
+                wp_enqueue_style('bootstrap-css-admin', 'https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css');
+                wp_enqueue_script('bootstrap-js-admin', 'https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js', array('jquery'), '5.0.2', true);
+            }
+        }
+
+        /**
+         * Styles and scripts
+         * 
+         * @since 1.0.1
+         */
+        public static function esat_enqueue_styles()
+        {
+            // Font awesome
+            // -----------------------------------------------------------------------------
+            //wp_enqueue_style('font-awesome', 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css', array(), '6.0.0-beta3');
+
+            /**
+             * Admin css and js
+             */
+            wp_enqueue_style('esat-admin-style', ESAT_URL . '/assets/admin/css/esat-admin-style.css', __FILE__);
+            wp_enqueue_style('east-admin-components', ESAT_URL . '/assets/admin/css/esat-admin-components.css', __FILE__);
+            wp_enqueue_script('jquery', 'https://code.jquery.com/jquery-1.12.0.min.js', array(), null, false);
+            wp_enqueue_script('esat-admin-components', ESAT_URL . '/assets/admin/js/esat-admin-components.js', __FILE__, array('jquery'), null, true);
+
+            /**
+             * Public css and js
+             */
+            //wp_enqueue_style('esat-public-style', ESAT_URL . '/assets/public/css/esat-public-style.css', __FILE__);
+            wp_enqueue_style('east-public-components', ESAT_URL . '/assets/public/css/esat-public-components.css', __FILE__);
+            wp_enqueue_script('esat-public-components', ESAT_URL . '/assets/public/js/esat-public-components.js', __FILE__, array('jquery'), null, true);
+        }
+
+        /**
+         * Menu
+         * 
+         * @since 1.0.0
+         */
+        public function esat_menu()
+        {
+            add_menu_page(
+                'ESAT',
+                'ESAT',
+                'manage_options',
+                'esat',
+                array($this, 'esat_overview_submenu'),
+                'data:image/svg+xml;base64,' . base64_encode(file_get_contents(ESAT_DIR . '/assets/admin/images/esat-icon.svg')),
+                99
+            );
+            add_submenu_page(
+                'esat',
+                'Overview',
+                'Overview',
+                'manage_options',
+                'esat',
+                'esat_overview_submenu'
+            );
+            add_submenu_page(
+                'esat',
+                'Settings',
+                'Settings',
+                'manage_options',
+                'esat-settings',
+                array($this, 'esat_settings_submenu')
+            );
+            add_submenu_page(
+                'esat',
+                'About us',
+                'About us',
+                'manage_options',
+                'esat-about-us',
+                array($this, 'esat_about_us_submenu')
+            );
+            add_submenu_page(
+                'esat',
+                'Upgrade to Pro',
+                'Upgrade to Pro',
+                'manage_options',
+                'esat-upgrade-to-pro',
+                array($this, 'esat_upgrade_to_pro_submenu')
+            );
+        }
+
+        public function esat_admin_header($pageTitle)
+        {
+            echo '
+            <div class="esat-header-container">
+                <div class="esat-header-container-title">
                     <img id="" src="' . ESAT_URL . 'assets/admin/images/esat-logo-h40.webp' . '" alt="ESAT - essential settings and tools icon">
                 </div>
                 
@@ -163,258 +228,240 @@ class ESAT_Core {
                 </button>
             </div>
         ';
+        }
+
+        public function esat_overview_submenu()
+        {
+            ?><div class="esat-container"><?php
+            $pageTitle = 'Overview';
+            $this->esat_admin_header($pageTitle);
+            if (file_exists(ESAT_DIR . '/core/templates/esat-page-overview.php')) {
+                require_once ESAT_DIR . '/core/templates/esat-page-overview.php';
+            }
+            ?></div><?php
+        }
+
+        public function esat_settings_submenu()
+        {
+            ?><div class="esat-container"><?php
+            $pageTitle = 'Settings';
+            $this->esat_admin_header($pageTitle);
+            if (file_exists(ESAT_DIR . '/core/templates/esat-page-settings.php')) {
+                require_once ESAT_DIR . '/core/templates/esat-page-settings.php';
+            }
+            ?></div><?php
+        }
+
+        public function esat_about_us_submenu()
+        {
+            ?><div class="esat-container"><?php
+            $pageTitle = 'About us';
+            $this->esat_admin_header($pageTitle);
+            if (file_exists(ESAT_DIR . '/core/templates/esat-page-about-us.php')) {
+                require_once ESAT_DIR . '/core/templates/esat-page-about-us.php';
+            }
+            ?></div><?php
+        }
+
+        public function esat_upgrade_to_pro_submenu()
+        {
+            ?><div class="esat-container"><?php
+            $pageTitle = 'Upgrade to Pro';
+            $this->esat_admin_header($pageTitle);
+            if (file_exists(ESAT_DIR . '/core/templates/esat-page-upgrade-to-pro.php')) {
+                require_once ESAT_DIR . '/core/templates/esat-page-upgrade-to-pro.php';
+            }
+            ?></div><?php
+        }
+
+        /**
+         * Dashboard widget
+         * 
+         * @since 1.0.1
+         */
+        public function esat_dashboard_widget() {
+            wp_add_dashboard_widget(
+            	'esat_dashboard_widget',
+            	'ESAT - Essential Settings and Tools Overview',
+            	'esat_dashboard_widget_callback'
+            );
+        }
+        
+        public function esat_dashboard_widget_callback() {
+            include ESAT_DIR . '/core/templates/esat-dashboard-widget.php';
+        }
+        
+        /**
+         * Feedback notice
+         * @since 1.0.0
+         */
+        public function esat_display_feedback_notice()
+        {
+            if (basename($_SERVER['SCRIPT_FILENAME']) !== 'index.php') {
+            	require_once ESAT_DIR . '/core/templates/esat-notice-feedback.php';
+            }
+        }
+        
+        /**
+         * Remove all notices on plugin page
+         * 
+         * @since 1.0.0
+         */
+        public function remove_other_plugins_notifications()
+        {
+            $current_screen = get_current_screen();
+            if ($current_screen && $current_screen->base === 'esat') {
+                // Eliminăm notificările de la alte pluginuri folosind CSS sau JavaScript
+                echo '<style>.update-nag, .notice, .error { display: none !important; }</style>';
+            }
+        }
+
+        /**
+         * Options and links on plugins page
+         * 
+         * @since 1.0.0
+         */
+        public function esat_settings_plugin_action_links($links)
+        {
+            $settings_url = admin_url('admin.php?page=esat-settings');
+            $settings_link = '<a href="' . esc_url($settings_url) . '">Settings</a>';
+            array_unshift($links, $settings_link);
+            return $links;
+        }
+
+        public function esat_get_pro_plugin_action_links($links)
+        {
+            $settings_url = ('https://sentientbit.com/plugins/esat/get-pro');
+            $links[] = '<a rel="nofollow" href="' . esc_url($settings_url) . '" class="esat-plugins-gopro" target="_blank">Get ESAT Pro</a>';
+            return $links;
+        }
+
+        public function esat_docs_faqs_plugin($links, $file)
+        {
+            if ($file == ESAT_BASENAME) {
+                $links[] = '<a rel="nofollow" href="https://sentientbit.com/plugins/esat/#faq" target="_blank">FAQs</a>';
+            }
+            return $links;
+        }
+
+        /**
+         * Update
+         * 
+         * @since 1.0.2
+         */
+        /*public function esat_check_for_updates()
+        {
+            if (!function_exists('wp_remote_get') || !function_exists('wp_update_plugin')) {
+                return;
+            }
+
+            $current_version = ESAT_VERSION;
+            $github_api_url = 'https://api.github.com/repos/sentientbit/esat/releases/latest';
+
+            $response = wp_remote_get($github_api_url);
+
+            if (is_wp_error($response)) {
+                return;
+            }
+
+            $release_data = json_decode(wp_remote_retrieve_body($response), true);
+
+            if (version_compare($release_data['tag_name'], $current_version, '>')) {
+                $download_url = $release_data['zipball_url'];
+                $plugin_slug = 'esat/esat.php';
+                $plugin_zip = download_url($download_url);
+
+                if (!is_wp_error($plugin_zip)) {
+                    $plugin = array(
+                        'plugin' => $plugin_slug,
+                        'new_version' => $release_data['tag_name'],
+                        'package' => $plugin_zip,
+                    );
+
+                    wp_update_plugin($plugin);
+                }
+            }
+        }*/
+        /*public function check_github_update() {
+            
+            // URL-ul către API-ul GitHub pentru obținerea informațiilor despre ultima versiune
+            $current_version = ESAT_VERSION;
+            $github_api_url = 'https://api.github.com/repos/sentientbit/esat/releases/latest';
+            
+            // Facem o solicitare GET către API-ul GitHub
+            $response = wp_remote_get( $github_api_url );
+            
+            // Verificăm dacă solicitarea a fost cu succes și procesăm răspunsul
+            if ( ! is_wp_error( $response ) && wp_remote_retrieve_response_code( $response ) === 200 ) {
+                
+                $body = wp_remote_retrieve_body( $response );
+                $data = json_decode( $body );
+                
+                // Obținem ultima versiune disponibilă din răspunsul API-ului GitHub
+                $latest_version = $data->tag_name;
+                
+                // Comparăm versiunea curentă a plugin-ului cu ultima versiune disponibilă
+                if ( version_compare( '$current_version', $latest_version, '<' ) ) {
+                    
+                }
+            }
+        }*/
+        
+        /*public function display_update_notification_in_plugins_page() {
+            echo "<tr class='plugin-update-tr active' id='esat-update' data-slug='esat' data-plugin='esat/esat.php' style='border-top: none;'>
+                <td colspan='4' class='plugin-update colspanchange'>
+                    <div class='update-message notice inline notice-warning notice-alt'>
+                        <p>There is a new version of ESAT available. <a href='https://wft.sentientbit.com/wp-admin/plugin-install.php?tab=plugin-information&amp;plugin=esat&amp;section=changelog&amp;TB_iframe=true&amp;width=772&amp;height=851' class='thickbox open-plugin-details-modal' aria-label='View Esat version " . $latest_version . " details'>View version " . $latest_version . " details</a> or <a href='https://sentientbit.com/wp-admin/update.php?action=upgrade-plugin&amp;plugin=essential-settings-and-tools%2Fesat.php&amp;_wpnonce=2a07633cc9' class='update-link' aria-label='Update ESAT now'>update now</a>.
+                        </p>
+                    </div>
+                </td>
+            </tr>";
+        }*/
+        
+        /*public function update_github_plugin() {
+            $plugin_slug = 'esat';
+            $plugin_path = sprintf( 'https://api.github.com/repos/sentientbit/esat/releases/latest', $plugin_slug );
+            $upgrader = new Plugin_Upgrader( new WP_Upgrader_Skin() );
+            $upgrader->install( $plugin_path );
+        }*/
+        
+        /*public function display_update_notification_in_plugins_page2() {
+            echo '<tr class="update"><td colspan="5"><strong>O actualizare este disponibilă pentru ESAT. <a href="#">Actualizează acum</a></strong></td></tr>';
+        }*/
+
+        /*public function display_update_notification_in_plugins_page3( $plugin_file, $plugin_data, $status ) {
+            // Verificăm dacă plugin-ul are o actualizare disponibilă
+            if ( $status['update'] && version_compare( $status['update'], $plugin_data['Version'], '>' ) ) {
+                // Afișăm notificarea
+                echo '<tr class="update" style="background-color: #f7f7f7;"><td colspan="4">';
+                echo '<strong>O actualizare este disponibilă pentru acest plugin. <a href="#">Actualizează acum</a></strong>';
+                echo '</td></tr>';
+            }
+        }*/
+        
+        
+        /**
+        * Deactivation
+        * 
+        * @since 1.0.2
+        */
+        /*function esat_deactivation() {
+            wp_redirect(ESAT_URL . 'templates/esat-before-you-go.php');
+            exit;
+        }*/
+
+        /**
+         * Uninstall
+         * 
+         * @since 1.0.3
+         */
+         /*function esat_delete() {
+        }*/
     }
 
-    public function esat_overview_submenu() {
-        $pageTitle = 'Overview';
-        $this->esat_admin_header($pageTitle);
-        if (file_exists(ESAT_DIR . '/core/templates/esat-page-overview.php')) {
-            require_once ESAT_DIR . '/core/templates/esat-page-overview.php';
-        }
-    }
-    
-    public function esat_settings_submenu() {
-        $pageTitle = 'Settings';
-        $this->esat_admin_header($pageTitle);
-        if (file_exists(ESAT_DIR . '/core/templates/esat-page-settings.php')) {
-            require_once ESAT_DIR . '/core/templates/esat-page-settings.php';
-        }
-    }
-    
-    public function esat_about_us_submenu() {
-        $pageTitle = 'About us';
-        $this->esat_admin_header($pageTitle);
-        if (file_exists(ESAT_DIR . '/core/templates/esat-page-about-us.php')) {
-            require_once ESAT_DIR . '/core/templates/esat-page-about-us.php';
-        }
-    }
-    
-    public function esat_upgrade_to_pro_submenu() {
-        $pageTitle = 'Upgrade to Pro';
-        $this->esat_admin_header($pageTitle);
-        if (file_exists(ESAT_DIR . '/core/templates/esat-page-upgrade-to-pro.php')) {
-            require_once ESAT_DIR . '/core/templates/esat-page-upgrade-to-pro.php';
-        }
-    }
-
-// =============================================================================
-// Plugin dashboard gadget
-// =============================================================================
-
-    
-// =============================================================================
-// Plugin options and links on plugins page
-// =============================================================================
-    public function esat_settings_plugin_action_links($links) {
-        $settings_url = admin_url('admin.php?page=Settings');
-        $settings_link = '<a href="' . esc_url($settings_url) . '">Settings</a>';
-        array_unshift($links, $settings_link);
-        return $links;
-    }
-    
-    public function esat_get_pro_plugin_action_links($links) {
-        $settings_url = ('https://sentientbit.com/plugins/esat/get-pro');
-        $links[] = '<a rel="nofollow" href="' . esc_url($settings_url) . '" class="esat-plugins-gopro" target="_blank">Get ESAT Pro</a>';
-        return $links;
-    }
-    
-    public function esat_about_plugin($links, $file) {
-        if ($file == ESAT_BASENAME) {
-            $links[] = '<a rel="nofollow" href="https://sentientbit.com/plugins/esat" target="_blank">View details</a>';
-        }
-        return $links;
-    }
-    
-    public function esat_docs_faqs_plugin($links, $file) {
-        if ($file == ESAT_BASENAME) {
-            $links[] = '<a rel="nofollow" href="https://sentientbit.com/plugins/esat/faq" target="_blank">Docs & FAQs</a>';
-        }
-        return $links;
-    }
-    
-    // Funcția pentru eliminarea notificărilor de la alte pluginuri
-    public function remove_other_plugins_notifications() {
-        $current_screen = get_current_screen();
-        if ($current_screen && $current_screen->base === 'esat') {
-            // Eliminăm notificările de la alte pluginuri folosind CSS sau JavaScript
-            echo '<style>.update-nag, .notice, .error { display: none !important; }</style>';
-        }
-    }
+    ESAT_Core::get_instance();
 }
 
-ESAT_Core::get_instance();
 
-
-
-
-
-
-
-
-// =============================================================================
-// Plugin update
-// =============================================================================
-/*function esat_check_for_updates() {
-    $update_url = 'https://sentientbit.com/wp-content/plugins/wp-sat/version.txt'; // URL-ul unde este disponibilă versiunea curentă a pluginului
-    
-    // Obține conținutul fișierului de versiune folosind wp_remote_get
-    $response = wp_remote_get($update_url);
-    
-    // Verifică dacă răspunsul este primit cu succes
-    if (!is_wp_error($response) && $response['response']['code'] === 200) {
-        $latest_version = trim($response['body']);
-        $installed_version = ESAT_VERSION; // Versiunea instalată a pluginului
         
-        // Compară versiunile
-        if (version_compare($latest_version, $installed_version, '>')) {
-            // Dacă versiunea disponibilă este mai mare, afișează opțiunea de actualizare în panoul de administrare
-            add_action('admin_notices', 'esat_display_update_notice');
-        }
-    }
-}
-
-// Funcție pentru afișarea notificării de actualizare
-function esat_display_update_notice() {
-    ?>
-    <div class="notice notice-info is-dismissible">
-        <p><?php _e('O nouă versiune a WP SAT este disponibilă! Vă rugăm să actualizați acum.', 'esat'); ?></p>
-        <p><a href="<?php echo admin_url('update-core.php'); ?>" class="button button-primary"><?php _e('Actualizează acum', 'esat'); ?></a></p>
-    </div>
-    <?php
-}
-
-// Verificare actualizări la inițializarea adminului
-add_action('admin_init', 'esat_check_for_updates');*/
-
-// =============================================================================
-// Plugin uninstall
-// =============================================================================
-
-}
-
-
-use  WP_Admin_Bar ;
-use  ArrayObject ;
-use  NumberFormatter ;
-
-
-    function modify_admin_bar_menu( $wp_admin_bar )
-    {
-        $options = get_option( ASENHA_SLUG_U, array() );
-        // Hide WP Logo Menu
         
-        if ( array_key_exists( 'hide_ab_wp_logo_menu', $options ) ) {
-            remove_action( 'admin_bar_menu', 'wp_admin_bar_wp_menu', 10 );
-            // priority needs to match default value. Use QM to reference.
-        }
-        
-        // Hide Customize Menu
-        
-        if ( array_key_exists( 'hide_ab_customize_menu', $options ) && $options['hide_ab_customize_menu'] ) {
-            remove_action( 'admin_bar_menu', 'wp_admin_bar_customize_menu', 40 );
-            // priority needs to match default value. Use QM to reference.
-        }
-        
-        // Hide Updates Counter/Link
-        
-        if ( array_key_exists( 'hide_ab_updates_menu', $options ) && $options['hide_ab_updates_menu'] ) {
-            remove_action( 'admin_bar_menu', 'wp_admin_bar_updates_menu', 50 );
-            // priority needs to match default value. Use QM to reference.
-        }
-        
-        // Hide Comments Counter/Link
-        
-        if ( array_key_exists( 'hide_ab_comments_menu', $options ) && $options['hide_ab_comments_menu'] ) {
-            remove_action( 'admin_bar_menu', 'wp_admin_bar_comments_menu', 60 );
-            // priority needs to match default value. Use QM to reference.
-        }
-        
-        // Hide New Content Menu
-        
-        if ( array_key_exists( 'hide_ab_new_content_menu', $options ) && $options['hide_ab_new_content_menu'] ) {
-            remove_action( 'admin_bar_menu', 'wp_admin_bar_new_content_menu', 70 );
-            // priority needs to match default value. Use QM to reference.
-        }
-        
-        // Hide 'Howdy' text
-        
-        if ( array_key_exists( 'hide_ab_howdy', $options ) && $options['hide_ab_howdy'] ) {
-            // Remove the whole my account sectino and later rebuild it
-            remove_action( 'admin_bar_menu', 'wp_admin_bar_my_account_item', 7 );
-            $current_user = wp_get_current_user();
-            $user_id = get_current_user_id();
-            $profile_url = get_edit_profile_url( $user_id );
-            $avatar = get_avatar( $user_id, 26 );
-            // size 26x26 pixels
-            $display_name = $current_user->display_name;
-            $class = ( $avatar ? 'with-avatar' : 'no-avatar' );
-            $wp_admin_bar->add_menu( array(
-                'id'     => 'my-account',
-                'parent' => 'top-secondary',
-                'title'  => $display_name . $avatar,
-                'href'   => $profile_url,
-                'meta'   => array(
-                'class' => $class,
-            ),
-            ) );
-        }
-    
-    }
-
-    add_action( 'admin_bar_menu', 'modify_admin_bar_menu', 999 );
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*function esat_enqueue_admin_styles() {
-    /*$screen = get_current_screen();
-    if ($screen && $screen->id === 'esat-dashboard') {*/
-    /*if (is_admin()) {
-        wp_enqueue_style('bootstrap-css-admin', 'https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css');
-        wp_enqueue_style('east-admin-components', ESAT_URL . '/assets/admin/css/esat-admin-components.css', __FILE__);
-    }
-}
-add_action('admin_enqueue_scripts', 'esat_enqueue_admin_styles');
-
-function esat_enqueue_admin_public_styles() {
-    wp_enqueue_style('esat-admin-style', ESAT_URL . '/assets/admin/css/esat-admin-style.css', __FILE__);
-}
-add_action('admin_enqueue_scripts', 'esat_enqueue_admin_public_styles');
-
-function esat_enqueue_admin_scripts() {
-    if (is_admin()) {
-        wp_enqueue_script('bootstrap-js-admin', 'https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js', array('jquery'), '5.0.2', true);
-        //wp_enqueue_script('jquery', 'https://code.jquery.com/jquery-1.12.0.min.js', array(), null, false);
-        //wp_enqueue_script('esat-admin-script', ESAT_URL . '/assets/admin/js/esat-admin-components.js', __FILE__, array('jquery'), null, true);
-    }
-}
-add_action('admin_enqueue_scripts', 'esat_enqueue_admin_scripts');
-
-function add_font_awesome() {
-    wp_enqueue_style('font-awesome', 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css', array(), '6.0.0-beta3');
-}
-add_action('wp_enqueue_scripts', 'add_font_awesome');*/
