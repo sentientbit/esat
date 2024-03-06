@@ -7,29 +7,13 @@ namespace ESAT\Classes;
 // @since 1.0.0
 // =============================================================================
 
-class Security
-{
-    /**
-    * Function description
-    * 
-    * @since 1.0.0
-    */
-}
-
-
-
-if (!class_exists('ESAT_Functions')) {
+if (!class_exists('ESAT_Security')) {
     
-    /* Start of class ESAT_Functions */
-    class ESAT_Functions {
+    class ESAT_Security {
         private static $instance;
     
         private function __construct() {
-            /* Security */
             add_shortcode('wordpress_version_check', 'check_wordpress_version_shortcode');
-            
-            /* Customization */
-            add_filter('admin_footer_text', array($this, 'custom_footer_message'), 10, 2);
         }
         
         public static function get_instance() {
@@ -38,15 +22,42 @@ if (!class_exists('ESAT_Functions')) {
             }
             return self::$instance;
         }
-    
-        // =====================================================================
-        // Security
-        // =====================================================================
+        
+        /**
+         * Perform checks before the plugin activation
+         * 
+         * @since 1.0.0
+         */
+        function esat_check_min_php_version() {
+            $min_php_version = '7.4';
+        
+            if (version_compare(PHP_VERSION, $min_php_version, '<')) {
+            	$error_message = sprintf(__('ESAT requires PHP version %1$s or greater. Older versions of PHP are no longer supported. Your current version of PHP is %2$s.', 'esat'), $min_php_version, PHP_VERSION);
+            	echo '<div class="error" style="padding: 300px;"><p>' . $error_message . '</p></div>';
+            	return false;
+            }
+            
+            return true;
+        }
+        
+        /**
+         * Check for the minimum WordPress version (@return bool)
+         * 
+         * @since 1.0.2
+         */
+        function esat_check_min_wp_version() {
+            $min_wp_version = '6.0';
+            
+            if (version_compare(get_bloginfo('version'), $min_wp_version, '<')) {
+            	return false;
+            }
+            
+            return true;
+        }
         
         // ---------------------------------------------------------------------
         // Check if installed WP version is the latest
         // ---------------------------------------------------------------------
-        
         public function check_wordpress_version_shortcode() {
             // Obține versiunea curentă a WordPress-ului
             $current_version = get_bloginfo('version');
@@ -78,24 +89,9 @@ if (!class_exists('ESAT_Functions')) {
             } else {
                 return 'Eroare la solicitarea API-ului.';
             }
-        }
-    
-        // =====================================================================
-        // Customization
-        // =====================================================================
-        
-        // ---------------------------------------------------------------------
-        // Replace footer message on admin panel
-        // ---------------------------------------------------------------------
-        public function custom_footer_message( $text ) {
-            $esat_custom_footer_message = "Salut! Mesajul tău personalizat aici.";
-        
-            return $esat_custom_footer_message;
-        }
-        
+        } 
     }
-    /* End of class ESAT_Functions */
     
-    ESAT_Functions::get_instance();
+    ESAT_Security::get_instance();
     
 }
