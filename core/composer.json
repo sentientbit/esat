@@ -1,0 +1,17 @@
+{
+    "name": "sentientbit/eset",
+    "description": "Eset Plugin",
+    "type": "wordpress-plugin",
+    "authors": [
+        {
+            "name": "Răzvan-Viorel Dumitrașc",
+            "email": "support@sentientbit.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "ESAT\\": "."
+        }
+    },
+    "require": {}
+}
