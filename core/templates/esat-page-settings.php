@@ -1,4 +1,4 @@
-<div class="esap-wpcontent">
+<div class="esat-content-container">
     <div class="d-flex align-items-start">
         <div class="nav esat-nav flex-column nav-pills border rounded-3 bg-white" id="v-pills-tab" role="tablist" aria-orientation="vertical">
             <button class="nav-link active text-start pt-3 pb-3" id="v-pills-admin-interface-tab" data-bs-toggle="pill" data-bs-target="#v-pills-admin-interface" type="button" role="tab" aria-controls="v-pills-admin-interface" aria-selected="false">
@@ -45,7 +45,7 @@
                 <table class="table esat-table">
                     <tbody>
                         <tr class="pt-4 pb-4">
-                            <th scope="row">Option 2</th>
+                            <th scope="row">Wider admin menu</th>
                             <td class="esat-table-switch-col">
                                 <div class="esat-form-switch">
                                     <input type="checkbox" id="esat[admin_interface_option_1]" class="form-check-input" name="esat[admin_interface_option_1]">
@@ -54,12 +54,12 @@
                             </td>
                 
                             <td>
-                                <span pe-2>Description.</span>
+                                <span pe-2>Expand the admin menu width to better accommodate wider items, thereby facilitating navigation and identification.</span>
                             </td>
                         </tr>
                 
                         <tr class="pt-4 pb-4">
-                            <th scope="row">Option 2</th>
+                            <th scope="row">Display deactivated plugins at end</th>
                             <td class="esat-table-switch-col">
                                 <div class="esat-form-switch">
                                     <input type="checkbox" id="esat[admin_interface_option_2]" class="form-check-input" name="esat[admin_interface_option_2]">
@@ -68,7 +68,7 @@
                             </td>
                 
                             <td>
-                                <span pe-2>Description.</span>
+                                <span pe-2>Show active plugins first in the Installed Plugins list. This is helpful when your website has numerous deactivated plugins used for testing or development purposes.</span>
                             </td>
                         </tr>
                 
@@ -192,7 +192,7 @@
                 <table class="table esat-table">
                     <tbody>
                         <tr class="pt-4 pb-4">
-                            <th scope="row">Option 1</th>
+                            <th scope="row">Preloader</th>
                             <td class="esat-table-switch-col">
                                 <div class="esat-form-switch">
                                     <input type="checkbox" id="esat[customization_option_1]" class="form-check-input" name="esat[customization_option_1]">
@@ -206,7 +206,7 @@
                         </tr>
 
                         <tr class="pt-4 pb-4">
-                            <th scope="row">Option 2</th>
+                            <th scope="row">Scroll to top</th>
                             <td class="esat-table-switch-col">
                                 <div class="esat-form-switch">
                                     <input type="checkbox" id="esat[customization_option_2]" class="form-check-input" name="esat[customization_option_2]">
@@ -220,7 +220,7 @@
                         </tr>
 
                         <tr class="pt-4 pb-4">
-                            <th scope="row">Option 3</th>
+                            <th scope="row">Login / Logout</th>
                             <td class="esat-table-switch-col">
                                 <div class="esat-form-switch">
                                     <input type="checkbox" id="esat[customization_option_3]" class="form-check-input" name="esat[customization_option_3]">
@@ -406,7 +406,7 @@
                             </td>
                             <td>
                                 <p class="no-margin">Description.</p>
-                                <div class="accordion full-width" id="accordionSecurity">
+                                <div class="accordion full-width" id="accordionSecurity_1">
                                     <div class="accordion-item">
                                         <p class="accordion-header no-margin" id="headingSecurity">
                                             <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSecurity" aria-expanded="true" aria-controls="collapseSecurity">Settings</button>
@@ -440,7 +440,7 @@
                             </td>
                             <td>
                                 <p class="no-margin">Description.</p>
-                                <div class="accordion full-width" id="accordionSecurity1">
+                                <div class="accordion full-width" id="accordionSecurity_2">
                                     <div class="accordion-item">
                                         <p class="accordion-header no-margin" id="headingSecurity1">
                                             <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSecurity1" aria-expanded="true" aria-controls="collapseSecurity1">Settings</button>
@@ -497,75 +497,3 @@
         </div>
     </div>
 </div>
-
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        // Apelăm funcția pentru fiecare set de checkbox-uri și accordions-urilor folosind id-urile corespunzătoare
-        setupAccordionCheckbox("esat_security_option_1", "accordionSecurity");
-        setupAccordionCheckbox("esat_security_option_2", "accordionSecurity1");
-
-        function setupAccordionCheckbox(checkboxId, accordionId) {
-            var checkbox = document.getElementById(checkboxId);
-            var accordion = document.getElementById(accordionId);
-
-            var isChecked = localStorage.getItem(checkboxId);
-            if (isChecked === "true") {
-                checkbox.checked = true;
-                accordion.classList.remove("disable");
-            } else {
-                checkbox.checked = false;
-                accordion.classList.add("disable");
-                accordion.querySelector(".accordion-collapse").classList.remove("show");
-            }
-
-            checkbox.addEventListener("change", function() {
-                if (this.checked) {
-                    accordion.classList.remove("disable");
-                    accordion.querySelector(".accordion-collapse").classList.add("show");
-                    localStorage.setItem(checkboxId, "true");
-                } else {
-                    accordion.classList.add("disable");
-                    accordion.querySelector(".accordion-collapse").classList.remove("show");
-                    localStorage.setItem(checkboxId, "false");
-                }
-            });
-        }
-    });
-    /*document.addEventListener("DOMContentLoaded", function() {
-        // Obținem tab-ul activ stocat în localStorage, dacă există
-        var activeTab = localStorage.getItem(\'activeTab\');
-    
-        // Verificăm dacă există un tab activ salvat în localStorage
-        if (activeTab) {
-            // Dezactivăm toate tab-urile
-            var tabs = document.querySelectorAll(\'.nav-link\');
-            tabs.forEach(function(tab) {
-                tab.classList.remove(\'active\');
-            });
-    
-            // Activăm tab-ul salvat anterior
-            var activeTabElement = document.getElementById(activeTab);
-            if (activeTabElement) {
-                activeTabElement.classList.add(\'active\');
-            }
-        }
-    
-        // Adăugăm un eveniment de click pentru fiecare tab
-        var tabButtons = document.querySelectorAll(\'.nav-link\');
-        tabButtons.forEach(function(button) {
-            button.addEventListener(\'click\', function() {
-                // Dezactivăm toate tab-urile
-                tabButtons.forEach(function(tab) {
-                    tab.classList.remove(\'active\');
-                });
-    
-                // Activăm tab-ul selectat
-                this.classList.add(\'active\');
-    
-                // Salvăm ID-ul tab-ului activ în localStorage
-                var tabId = this.getAttribute(\'id\');
-                localStorage.setItem(\'activeTab\', tabId);
-            });
-        });
-    });*/
-</script>
